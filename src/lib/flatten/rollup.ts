@@ -1,7 +1,6 @@
 import rollupJson from '@rollup/plugin-json';
 import * as path from 'path';
 import type { InputPluginOption, OutputAsset, OutputChunk, RollupCache } from 'rollup';
-import { dts } from 'rollup-plugin-dts';
 import { OutputFileCache } from '../ng-package/nodes';
 import { readCacheEntry, saveCacheEntry } from '../utils/cache';
 import * as log from '../utils/log';
@@ -34,15 +33,12 @@ export async function rollupBundleFile(
 
   log.debug(`rollup (v${rollup.VERSION}) ${opts.entry} to ${opts.dir}`);
   const cacheDirectory = opts.cacheDirectory;
-  const dtsMode = opts.entry.endsWith('.d.ts');
+  //const dtsMode = opts.entry.endsWith('.d.ts');
   let outExtension: string;
   let plugins: InputPluginOption[];
   const jail = path.dirname(opts.entry);
 
-  if (dtsMode) {
-    outExtension = '.d.ts';
-    plugins = [fileLoaderPlugin(opts.fileCache, ['.d.ts', '/index.d.ts']), dts()];
-  } else {
+  {
     outExtension = '.mjs';
     plugins = [fileLoaderPlugin(opts.fileCache, ['.js', '/index.js']), rollupJson()];
   }
